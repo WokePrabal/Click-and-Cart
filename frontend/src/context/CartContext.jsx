@@ -1,7 +1,6 @@
 // frontend/src/context/CartContext.jsx
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-
-export const CartContext = createContext();
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { CartContext } from './CartContext.js';
 
 export const CartProvider = ({ children }) => {
   const [items, setItems] = useState(() => {
@@ -70,4 +69,4 @@ export const CartProvider = ({ children }) => {
 };
 
 export const useCart = () => useContext(CartContext);
-export default CartContext;
+export const useCart = () => useContext(CartContext);

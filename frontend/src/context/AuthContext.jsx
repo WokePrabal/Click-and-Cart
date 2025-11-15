@@ -1,7 +1,7 @@
 // frontend/src/context/AuthContext.jsx
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import api from '../api/axios';
-import { AuthContext } from './AuthContextValue';
+import { AuthContext } from './AuthContext';
 
 // Create context moved to AuthContextValue.js
 
@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const raw = localStorage.getItem('user');
       return raw ? JSON.parse(raw) : null;
-    } catch (e) {
+    } catch (_) {
       return null;
     }
   });
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
 
   const saveUser = (u) => {
     setUser(u);
-    try { localStorage.setItem('user', JSON.stringify(u)); } catch (e) {}
+    try { localStorage.setItem('user', JSON.stringify(u)); } catch {}
     if (u && u.token) api.defaults.headers.common['Authorization'] = `Bearer ${u.token}`;
   };
 
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
-    try { localStorage.removeItem('user'); } catch (e) {}
+    try { localStorage.removeItem('user'); } catch {}
     delete api.defaults.headers.common['Authorization'];
   };
 
@@ -58,5 +58,3 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// convenience hook (named export)
-export const useAuth = () => useContext(AuthContext);

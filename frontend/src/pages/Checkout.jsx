@@ -2,11 +2,9 @@ import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import api from '../api/axios';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 
 export default function Checkout(){
   const { items, totalPrice, clearCart } = useCart();
-  const { user } = useAuth();
   const navigate = useNavigate();
 
   const [step, setStep] = useState(1);
