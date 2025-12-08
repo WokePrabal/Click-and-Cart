@@ -1,102 +1,93 @@
 // frontend/src/pages/Orders.jsx
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
-import { useAuth } from '../context/AuthContext';
-import { Link } from 'react-router-dom';
-import { FaTruck, FaBoxOpen, FaCheckCircle } from 'react-icons/fa';
 
-export default function Orders(){
-  const { user } = useAuth();
+export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [err, setErr] = useState('');
+  const navigate = useNavigate();
 
-  useEffect(()=>{
-    if (!user) { setLoading(false); return; }
-    let mounted = true;
-    (async ()=>{
-      try {
-        setLoading(true);
-        const { data } = await api.get('/orders/myorders'); // ensure backend route exists
-        if (!mounted) return;
-        setOrders(data);
-      } catch (e) {
-        console.error(e);
-        if (mounted) setErr('Failed to load orders.');
-      } finally {
-        if (mounted) setLoading(false);
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      // api.get will automatically attach token from localStorage (see api/axios.js)
+      const { data } = await api.get('/orders/myorders');
+      // Normalize to array if server used a wrapper
+      const items = Array.isArray(data) ? data : (Array.isArray(data?.orders) ? data.orders : []);
+      setOrders(items);
+    } catch (err) {
+      console.error("[Orders] fetch error:", err);
+      const status = err?.response?.status;
+      if (status === 401) {
+        // token missing/invalid — user must re-login
+        try { localStorage.removeItem('user'); } catch {}
+        // navigate to login (replace) so back button doesn't return to protected page
+        navigate('/login', { replace: true });
+        return;
       }
-    })();
-    return ()=> mounted = false;
-  }, [user]);
+      alert('Could not fetch orders. See console for details.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  if (!user) return (
-    <div className="container" style={{marginTop:32}}>
-      <div className="card" style={{padding:24, textAlign:'center'}}>
-        <h3>Please sign in</h3>
-        <p className="muted">You need an account to view your orders.</p>
-        <Link to="/login" className="btn-primary">Sign in</Link>
-      </div>
-    </div>
-  );
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      if (!mounted) return;
+      await fetchOrders();
+    })();
+    return () => { mounted = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (loading) return <div className="container"><p>Loading orders...</p></div>;
 
   return (
-    <div className="container" style={{marginTop:28}}>
-      <header style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16}}>
-        <h2>Your Orders</h2>
-        <div className="muted small">{orders.length} order{orders.length !== 1 ? 's' : ''}</div>
-      </header>
-
-      {loading && <p>Loading orders…</p>}
-      {err && <div className="error">{err}</div>}
-
-      {!loading && !orders.length && (
-        <div className="card" style={{padding:24, textAlign:'center'}}>
-          <h3>No orders yet</h3>
-          <p className="muted">Start shopping and your orders will appear here.</p>
-          <Link to="/" className="btn-primary">Shop now</Link>
-        </div>
-      )}
-
-      <div style={{display:'grid', gap:16}}>
-        {orders.map(o => (
-          <article className="order-card" key={o._id}>
-            <div className="order-head">
-              <div>
-                <strong>Order #{String(o._id).slice(-6).toUpperCase()}</strong>
-                <div className="muted small">{new Date(o.createdAt).toLocaleString()}</div>
-              </div>
-
-              <div style={{textAlign:'right'}}>
-                <div className="muted small">Items: {o.orderItems.length}</div>
-                <div style={{fontWeight:700, marginTop:6}}>₹{Number(o.totalPrice).toFixed(2)}</div>
-              </div>
+    <div className="container orders-list">
+      <h1>Your Orders</h1>
+      <div className="grid-orders">
+        {Array.isArray(orders) && orders.length === 0 && <p>No orders found.</p>}
+        {Array.isArray(orders) && orders.map((o) => (
+          <div className="order-card" key={o._id}>
+            <div className="top">
+              <div className="id">Order #{o._id?.slice(-6)}</div>
+              <div className="status">{o.isPaid ? 'Paid' : 'Processing'}</div>
             </div>
-
-            <div className="order-body">
-              <div className="order-items">
-                {o.orderItems.slice(0,4).map(it => (
-                  <div className="mini-item" key={it.product}>
-                    <img src={it.image} alt={it.name} />
-                    <div style={{fontSize:13}}>
-                      <div style={{fontWeight:600}}>{it.name}</div>
-                      <div className="muted small">Qty: {it.qty}</div>
-                    </div>
-                    <div style={{marginLeft:'auto', fontWeight:700}}>₹{Number(it.price*it.qty).toFixed(2)}</div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="order-meta">
-                <div className={`status ${o.isDelivered ? 'delivered' : (o.isShipped ? 'shipped' : 'processing')}`}>
-                  {o.isDelivered ? <><FaCheckCircle/> Delivered</> : (o.isShipped ? <><FaTruck/> Shipped</> : <><FaBoxOpen/> Processing</>)}
-                </div>
-                <Link to={`/orders/${o._id}`} className="btn-outline">View details</Link>
-              </div>
+            <div className="items">Items: {o.orderItems?.length || 0}</div>
+            <div className="total">₹{o.totalPrice}</div>
+            <div className="actions">
+              <button className="btn-outline" onClick={() => navigate(`/orders/${o._id}`)}>View details</button>
+              <button className="btn-danger" onClick={() => {
+                if (!confirm('Cancel this order permanently?')) return;
+                api.delete(`/orders/${o._id}`).then(() => {
+                  setOrders(prev => prev.filter(x => x._id !== o._id));
+                  alert('Order cancelled');
+                }).catch(e => {
+                  console.error('[Orders] cancel error', e);
+                  if (e?.response?.status === 401) {
+                    try { localStorage.removeItem('user'); } catch {}
+                    navigate('/login', { replace: true });
+                    return;
+                  }
+                  alert('Could not cancel order');
+                });
+              }}>Cancel</button>
             </div>
-          </article>
+          </div>
         ))}
       </div>
+
+      <style>{`
+        .grid-orders{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px }
+        .order-card{ border:1px solid #e6edf3; padding:14px; border-radius:10px }
+        .top{ display:flex; justify-content:space-between; align-items:center }
+        .status{ background:#fff7ed; padding:6px 10px; border-radius:8px }
+        .actions{ display:flex; gap:8px; margin-top:12px }
+        .btn-outline{ padding:8px 10px; border-radius:8px; border:1px solid #cbd5e1 }
+        .btn-danger{ background:#ef4444; color:white; padding:8px 10px; border-radius:8px; border:0 }
+      `}</style>
     </div>
   );
 }

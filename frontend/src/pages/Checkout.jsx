@@ -143,3 +143,98 @@ const placeOrder = async () => {
     </div>
   );
 }
+
+
+
+
+// new code 
+
+
+// import React, { useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
+
+// export default function Checkout(){
+//   const [step, setStep] = useState(1);
+//   const [address, setAddress] = useState({ name:'', line:'', city:'', postal:'' });
+//   const navigate = useNavigate();
+
+//   const next = () => setStep(s => Math.min(4, s+1));
+//   const back = () => setStep(s => Math.max(1, s-1));
+
+//   return (
+//     <div className="container checkout-page">
+//       <h1>Checkout</h1>
+//       <div className="steps">
+//         <div className={`step ${step===1? 'active':''}`}>1. Shipping</div>
+//         <div className={`step ${step===2? 'active':''}`}>2. Payment</div>
+//         <div className={`step ${step===3? 'active':''}`}>3. Summary</div>
+//         <div className={`step ${step===4? 'active':''}`}>4. Confirm</div>
+//       </div>
+
+//       <div className="panel">
+//         {step===1 && (
+//           <div className="shipping">
+//             <label>Full name<input value={address.name} onChange={e=>setAddress({...address, name:e.target.value})} /></label>
+//             <label>Address<input value={address.line} onChange={e=>setAddress({...address, line:e.target.value})} /></label>
+//             <label>City<input value={address.city} onChange={e=>setAddress({...address, city:e.target.value})} /></label>
+//             <label>Postal code<input value={address.postal} onChange={e=>setAddress({...address, postal:e.target.value})} /></label>
+//             <div className="row-actions">
+//               <button className="btn-outline" onClick={()=>navigate(-1)}>Back</button>
+//               <button className="btn-primary" onClick={next}>Continue</button>
+//             </div>
+//           </div>
+//         )}
+
+//         {step===2 && (
+//           <div className="payment">
+//             <h3>Payment</h3>
+//             <p>Choose payment method</p>
+//             <select defaultValue="cod">
+//               <option value="cod">Cash on Delivery (COD)</option>
+//               <option value="razor">Razorpay (demo)</option>
+//             </select>
+//             <div className="row-actions">
+//               <button className="btn-outline" onClick={back}>Back</button>
+//               <button className="btn-primary" onClick={next}>Continue</button>
+//             </div>
+//           </div>
+//         )}
+
+//         {step===3 && (
+//           <div className="summary">
+//             <h3>Order Summary</h3>
+//             <p>Items: 3</p>
+//             <p>Total: ₹8999</p>
+//             <div className="row-actions">
+//               <button className="btn-outline" onClick={back}>Back</button>
+//               <button className="btn-primary" onClick={next}>Confirm</button>
+//             </div>
+//           </div>
+//         )}
+
+//         {step===4 && (
+//           <div className="confirm">
+//             <h3>All set!</h3>
+//             <p>Click place order to complete.</p>
+//             <div className="row-actions">
+//               <button className="btn-outline" onClick={back}>Back</button>
+//               <button className="btn-primary" onClick={()=>alert('Order placed (demo)')}>Place Order</button>
+//             </div>
+//           </div>
+//         )}
+//       </div>
+
+//       <style>{`
+//         .steps{ display:flex; gap:8px; margin:12px 0 }
+//         .step{ padding:8px 12px; border-radius:8px; background:#f1f5f9 }
+//         .step.active{ background:linear-gradient(90deg,#60a5fa,#3b82f6); color:white; transform:translateY(-3px) }
+//         .panel{ margin-top:16px; border:1px solid #eef2f7; padding:18px; border-radius:10px }
+//         label{ display:block; margin-bottom:10px }
+//         input, select{ width:100%; padding:8px; border-radius:8px; border:1px solid #e2e8f0 }
+//         .row-actions{ display:flex; justify-content:space-between; margin-top:16px }
+//         .btn-primary{ background:#06b6d4; color:white; padding:8px 14px; border-radius:8px; border:0 }
+//         .btn-outline{ border:1px solid #cbd5e1; padding:8px 14px; border-radius:8px; background:white }
+//       `}</style>
+//     </div>
+//   )
+// }

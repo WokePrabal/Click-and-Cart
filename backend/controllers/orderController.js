@@ -60,3 +60,25 @@ export const getOrderById = asyncHandler(async (req, res) => {
   }
   res.json(order);
 });
+// new code
+
+
+//import Order from '../models/orderModel.js';
+
+export const deleteOrder = async (req, res) => {
+  try{
+    const order = await Order.findById(req.params.id);
+    if(!order) return res.status(404).json({ message: 'Order not found' });
+
+    // only order owner or admin can delete
+    if(order.user.toString() !== req.user._id.toString() && !req.user.isAdmin){
+      return res.status(401).json({ message: 'Not authorized' });
+    }
+
+    await order.deleteOne();
+    res.json({ message: 'Order removed' });
+  }catch(err){
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+}

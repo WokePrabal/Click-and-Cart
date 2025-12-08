@@ -8,6 +8,7 @@ import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Orders from "./pages/Orders";
+import OrderDetails from "./pages/OrderDetails";
 import Checkout from "./pages/Checkout";
 import SearchResults from "./pages/SearchResults";
 import Wishlist from "./pages/Wishlist";
@@ -26,6 +27,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/orders/:id" element={<OrderDetails />} />
       </Routes>
     </>
   );

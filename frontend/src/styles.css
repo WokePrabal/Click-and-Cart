@@ -561,3 +561,14 @@ body{
   background: white;
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
+/* ---------- Order Details Page ---------- */
+        .steps{ display:flex; gap:8px; margin:12px 0 }
+        .step{ padding:8px 12px; border-radius:8px; background:#f1f5f9 }
+        .step.active{ background:linear-gradient(90deg,#60a5fa,#3b82f6); color:white; transform:translateY(-3px) }
+        .panel{ margin-top:16px; border:1px solid #eef2f7; padding:18px; border-radius:10px }
+        label{ display:block; margin-bottom:10px }
+        input, select{ width:100%; padding:8px; border-radius:8px; border:1px solid #e2e8f0 }
+        .row-actions{ display:flex; justify-content:space-between; margin-top:16px }
+        .btn-primary{ background:#06b6d4; color:white; padding:8px 14px; border-radius:8px; border:0 }
+        .btn-outline{ border:1px solid #cbd5e1; padding:8px 14px; border-radius:8px; background:white }
+    
