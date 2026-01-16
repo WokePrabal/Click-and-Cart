@@ -1,34 +1,4 @@
-// // frontend/src/api/axios.js
-// import axios from 'axios';
 
-// // Priority: VITE_API_BASE_URL → fallback localhost
-// const baseURL =
-//   import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
-
-// const api = axios.create({
-//   baseURL,
-//   withCredentials: true
-// });
-
-// export default api;
-
-
-// new code 
-
-
-
-// import axios from 'axios';
-
-// const base = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || '/api';
-
-// const api = axios.create({
-//   baseURL: base,
-//   headers: { 'Content-Type': 'application/json' }
-// });
-
-// export default api;
-
-// another code
 
 
 
