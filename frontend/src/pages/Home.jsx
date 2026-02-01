@@ -16,7 +16,7 @@ export default function Home() {
         setLoading(true);
         setError('');
 
-        const { data } = await api.get('/products');
+        const { data } = await api.get('/api/products');
 
         if (mounted) {
           setProducts(Array.isArray(data) ? data : []);

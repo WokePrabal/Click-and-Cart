@@ -1,5 +1,7 @@
-const unsplash = (id) =>
-  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=900&q=80`;
+const unsplash = (id) => `/img/${id}?w=900`;
+
+
+
 
 export default [
   { name: 'Minimal Pump Bottles (3-pack)', image: unsplash('df3eG4zvamg'), brand: 'PureCo', category: 'Beauty', description: 'Refillable pump bottles for shampoo/soap.', price: 499, countInStock: 25 },
