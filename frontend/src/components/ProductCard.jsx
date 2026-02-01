@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 // runtime base (localhost vs production)
 const IMG_BASE = import.meta.env.PROD
-  ? 'https://click-and-cart-1.onrender.com'
+  ? 'https://click-and-cart-j738.onrender.com'
   : 'http://localhost:5000';
 
 export default function ProductCard({ p }) {
