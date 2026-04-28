@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import { useState } from 'react';
 
 export default function Navbar(){
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { items } = useCart();
   const navigate = useNavigate();
   const qty = items.reduce((s,i)=>s + Number(i.qty || 0), 0);
@@ -49,7 +49,6 @@ export default function Navbar(){
           {user ? (
             <>
               <Link to="/orders" className="link">{user.name.split(' ')[0]}</Link>
-              <button className="btn-ghost" onClick={()=>{ logout(); navigate('/'); }}>Logout</button>
             </>
           ) : (
             <>

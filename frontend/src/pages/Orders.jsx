@@ -1,12 +1,14 @@
 // frontend/src/pages/Orders.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const fetchOrders = async () => {
     try {
@@ -46,7 +48,12 @@ export default function Orders() {
 
   return (
     <div className="container orders-list">
-      <h1>Your Orders</h1>
+      <div className="orders-header">
+        <h1>Your Orders</h1>
+        <div>
+          <button className="btn-ghost" onClick={() => { logout(); navigate('/'); }}>Logout</button>
+        </div>
+      </div>
       <div className="grid-orders">
         {Array.isArray(orders) && orders.length === 0 && <p>No orders found.</p>}
         {Array.isArray(orders) && orders.map((o) => (
@@ -81,6 +88,7 @@ export default function Orders() {
 
       <style>{`
         .grid-orders{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px }
+        .orders-header{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px }
         .order-card{ border:1px solid #e6edf3; padding:14px; border-radius:10px }
         .top{ display:flex; justify-content:space-between; align-items:center }
         .status{ background:#fff7ed; padding:6px 10px; border-radius:8px }
