@@ -208,6 +208,11 @@ import api from '../api/axios';
 import { useCart } from '../context/CartContext';
 import RatingSelect from '../components/RatingSelect';
 
+// runtime base (localhost vs production) — used to prefix relative image paths
+const IMG_BASE = import.meta.env.PROD
+  ? 'https://click-and-cart-j738.onrender.com'
+  : 'http://localhost:5000';
+
 export default function ProductDetail(){
   const { id } = useParams();
   const [p, setP] = useState(null);
@@ -265,7 +270,14 @@ export default function ProductDetail(){
     <div className="container product-detail-page">
       <div className="detail">
         <div className="gallery">
-          <div className="main-img"><img src={p.image} alt={p.name} loading="lazy"/></div>
+          <div className="main-img">
+            <img
+              src={p.image && (p.image.startsWith('http') ? p.image : `${IMG_BASE}${p.image}`)}
+              alt={p.name}
+              loading="lazy"
+              onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/600x600?text=No+Image'; }}
+            />
+          </div>
         </div>
 
         <div className="info">
@@ -335,7 +347,7 @@ export default function ProductDetail(){
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .reviews-panel{ margin-top:24px; border-top:1px solid #eef2f7; padding-top:18px }
         .existing-reviews .review{ padding:12px; border:1px solid #f1f5f9; border-radius:8px; margin-bottom:10px }
         .existing-reviews .stars{ color:#f59e0b }

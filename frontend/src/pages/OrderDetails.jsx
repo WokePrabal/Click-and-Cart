@@ -3,6 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../api/axios';
 
+// runtime base (localhost vs production)
+const IMG_BASE = import.meta.env.PROD
+  ? 'https://click-and-cart-j738.onrender.com'
+  : 'http://localhost:5000';
+
 export default function OrderDetails(){
   const { id } = useParams();
   const [order, setOrder] = useState(null);
@@ -46,7 +51,13 @@ export default function OrderDetails(){
           <div className="items-list">
             {order.orderItems.map(it=> (
               <div className="item" key={it._id || it.product}>
-                <img src={it.image} alt={it.name} width={64} height={64} />
+                <img
+                  src={it.image && (it.image.startsWith('http') ? it.image : `${IMG_BASE}${it.image}`)}
+                  alt={it.name}
+                  width={64}
+                  height={64}
+                  onError={(e)=>{ e.currentTarget.src = 'https://via.placeholder.com/64x64?text=No+Image'; }}
+                />
                 <div className="meta">
                   <div className="name">{it.name}</div>
                   <div className="qty">Qty: {it.qty}</div>

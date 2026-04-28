@@ -11,7 +11,7 @@ export default function Categories(){
       {tiles.map(t=>(
         <a key={t.title} href={t.to} className="card" style={{padding:0, overflow:'hidden', position:'relative'}}>
           <img src={t.img} alt={t.title} style={{height:180, width:'100%', objectFit:'cover'}}/>
-          <div style="position:absolute;inset:auto 12px 12px 12px;background:rgba(0,0,0,.55);color:#fff;padding:8px 12px;border-radius:8px;">
+          <div style={{position: 'absolute', inset: 'auto 12px 12px 12px', background: 'rgba(0,0,0,.55)', color: '#fff', padding: '8px 12px', borderRadius: 8}}>
             <strong>{t.title}</strong>
           </div>
         </a>

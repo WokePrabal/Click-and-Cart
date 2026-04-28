@@ -2,6 +2,11 @@
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
+// runtime base (localhost vs production) — used to prefix relative image paths
+const IMG_BASE = import.meta.env.PROD
+  ? 'https://click-and-cart-j738.onrender.com'
+  : 'http://localhost:5000';
+
 export default function Cart() {
   const { items, removeFromCart, updateQty, totalPrice } = useCart();
   const shipping = items.length > 0 ? 49 : 0;
@@ -24,7 +29,11 @@ export default function Cart() {
         <ul>
           {items.map((i) => (
             <li key={i._id}>
-              <img src={i.image} alt={i.name} />
+              <img
+                src={i.image && (i.image.startsWith('http') ? i.image : `${IMG_BASE}${i.image}`)}
+                alt={i.name}
+                onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/300x300?text=No+Image'; }}
+              />
               <div className="info">
                 <h3>{i.name}</h3>
                 <p className="muted">₹{Number(i.price || 0)} • item id: {i._id}</p>

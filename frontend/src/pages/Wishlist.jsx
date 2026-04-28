@@ -4,6 +4,11 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 
+// runtime base (localhost vs production)
+const IMG_BASE = import.meta.env.PROD
+  ? 'https://click-and-cart-j738.onrender.com'
+  : 'http://localhost:5000';
+
 export default function Wishlist(){
   const [items, setItems] = useState([]);
   const { user } = useAuth();
@@ -38,7 +43,14 @@ export default function Wishlist(){
           const p = i.product;
           return (
             <div key={p._id} className="product-card">
-              <a href={`/product/${p._id}`}><img src={p.image} alt={p.name} style={{height:180,objectFit:'cover',width:'100%'}}/></a>
+              <a href={`/product/${p._id}`}>
+                <img
+                  src={p.image && (p.image.startsWith('http') ? p.image : `${IMG_BASE}${p.image}`)}
+                  alt={p.name}
+                  style={{height:180,objectFit:'cover',width:'100%'}}
+                  onError={(e)=>{ e.currentTarget.src = 'https://via.placeholder.com/300x300?text=No+Image'; }}
+                />
+              </a>
               <div style={{padding:12}}>
                 <h4>{p.name}</h4>
                 <div style={{display:'flex',gap:8,marginTop:8}}>

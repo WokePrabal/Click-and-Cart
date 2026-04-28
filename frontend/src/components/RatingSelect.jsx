@@ -22,7 +22,7 @@ export default function RatingSelect({ value = 0, onChange }) {
         </button>
       ))}
 
-      <style jsx>{`
+      <style>{`
         .rating-select{ display:flex; gap:6px; align-items:center }
         .rating-btn{ background:transparent; border:2px solid transparent; padding:6px; border-radius:8px; cursor:pointer; transition:transform .08s ease, background .12s ease }
         .rating-btn:focus{ outline:3px solid rgba(59,130,246,0.35) }
